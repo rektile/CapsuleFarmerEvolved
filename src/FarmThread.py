@@ -59,6 +59,7 @@ class FarmThread(Thread):
                         self.log.debug(f"Live matches: {', '.join(liveMatchesStatus)}")
                         liveMatchesMsg = f"{', '.join(liveMatchesStatus)}"
                         newDrops, totalDrops = self.browser.checkNewDrops(self.stats.getLastDropCheck(self.account))
+                        self.log.debug(f"new drops amount {len(newDrops)} - totalDropsLength {totalDrops}")
                         self.stats.setTotalDrops(self.account, totalDrops)
                         self.stats.updateLastDropCheck(self.account, int(datetime.now().timestamp() * 1e3))
                     else:
@@ -69,7 +70,9 @@ class FarmThread(Thread):
                         else:
                             self.stats.update(self.account, 0, liveMatchesMsg)
                     except (IndexError, KeyError):
+                        self.log.exception(f"Failed to update drops i guess?")
                         self.stats.update(self.account, len(newDrops), liveMatchesMsg)
+
                     if self.config.connectorDrops:
                         self.__notifyConnectorDrops(newDrops)
                     sleep(Browser.STREAM_WATCH_INTERVAL)
