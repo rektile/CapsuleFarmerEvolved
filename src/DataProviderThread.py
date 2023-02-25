@@ -39,7 +39,7 @@ class DataProviderThread(Thread):
                 self.fetchTimeUntilNextMatch()
                 sleep(DataProviderThread.DEFAULT_SLEEP_DURATION)
             except:
-                self.log.error("RIP")
+                self.log.exception("ERROR when fetching live matches.")
 
     def fetchLiveMatches(self):
         """
